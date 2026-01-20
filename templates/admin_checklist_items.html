@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Checklist Items Management</h2>
+
+    <!-- Department selector -->
+    <form method="get" action="{{ url_for('admin_checklist_items') }}">
+        <label><strong>Select Department</strong></label><br>
+        <select name="department" onchange="this.form.submit()" required>
+            <option value="">-- choose department --</option>
+            {% for dept in departments %}
+                <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>
+                    {{ dept }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if selected_department %}
+<div class="card">
+    <h3>Add Checklist Item ({{ selected_department }})</h3>
+
+    <form method="post" action="{{ url_for('admin_checklist_items') }}">
+        <input type="hidden" name="department" value="{{ selected_department }}">
+
+        <input
+            type="text"
+            name="item"
+            placeholder="e.g. Upload JAMB Result Slip"
+            required
+            style="width:100%; padding:8px; margin-bottom:10px;"
+        >
+
+        <button type="submit">Add Item</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Existing Checklist Items</h3>
+
+    {% if items %}
+        <ul>
+            {% for item in items %}
+                <li style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>{{ item["item"] }}</span>
+
+                    <a href="{{ url_for('admin_delete_checklist_item', item_id=item['id']) }}"
+                       onclick="return confirm('Delete this checklist item?')"
+                       style="color:red;">
+                        Delete
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="color:#777;">No checklist items yet for this department.</p>
+    {% endif %}
+</div>
+
+{% else %}
+<div class="card">
+    <p style="color:#777;">Select a department to manage checklist items.</p>
+</div>
+{% endif %}
+
+{% endblock %}

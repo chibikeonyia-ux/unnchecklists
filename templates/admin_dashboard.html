@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Admin Dashboard</h2>
+    <p>Welcome, <strong>{{ session.get('admin') }}</strong>.
+       Manage the system from here.</p>
+</div>
+
+<!-- ===================== QUICK STATS ===================== -->
+<div class="card">
+    <h3>Overview</h3>
+    <ul>
+        <li><strong>Total Users:</strong> {{ total_users }}</li>
+        <li><strong>Total Departments:</strong> {{ total_departments }}</li>
+        <li><strong>Total FAQs:</strong> {{ total_faqs }}</li>
+    </ul>
+</div>
+
+<!-- ===================== USER CONTACT INFO ===================== -->
+<div class="card">
+    <h3>User Contacts</h3>
+
+    {% if users %}
+        <table width="100%" cellpadding="8" style="border-collapse: collapse;">
+            <tr style="background:#f1f1f1;">
+                <th align="left">Username</th>
+                <th align="left">Email</th>
+                <th align="left">Phone</th>
+            </tr>
+
+            {% for user in users %}
+            <tr style="border-bottom:1px solid #ddd;">
+                <td>{{ user.username }}</td>
+                <td>{{ user.email or "—" }}</td>
+                <td>{{ user.phone or "—" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+</div>
+
+<!-- ===================== DEPARTMENT MANAGEMENT ===================== -->
+<div class="card">
+    <h3>Departments</h3>
+
+    <a href="{{ url_for('admin_departments') }}">
+        <button>Manage Departments</button>
+    </a>
+
+    <p style="margin-top:10px;">
+        Add departments and control submission order.
+    </p>
+</div>
+
+<!-- ===================== FAQ MANAGEMENT ===================== -->
+<div class="card">
+    <h3>FAQs</h3>
+
+    <a href="{{ url_for('admin_faqs') }}">
+        <button>Manage FAQs</button>
+    </a>
+
+    <p style="margin-top:10px;">
+        Edit questions users see on the FAQ page.
+    </p>
+</div>
+
+<!-- ===================== TEMPLATE MANAGEMENT ===================== --
+
+{% endblock %}

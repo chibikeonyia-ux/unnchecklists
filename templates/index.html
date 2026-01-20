@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Welcome to UNN Registration Assistant</h2>
+
+    {% if session.get('user') %}
+        <p>Choose your Faculty to begin your registration process.</p>
+
+        <a href="{{ url_for('select_department') }}">
+            <button>Start Registration</button>
+        </a>
+    {% else %}
+        <p>
+            This tool helps new students understand registration steps,
+            required documents, and submission order.
+        </p>
+
+        <p>Please login or create an account to continue.</p>
+
+        <a href="{{ url_for('login') }}">
+            <button>Login</button>
+        </a>
+
+        <a href="{{ url_for('register') }}">
+            <button>Create Account</button>
+        </a>
+    {% endif %}
+
+    <!--(<div style="margin-top:20px;">
+        <a href="{{ url_for('faqs') }}">
+            <button>View FAQs</button>
+        </a>
+    </div>
+
+    <div style="margin-top:20px;">
+        <a href="{{ url_for('generate_document') }}">
+            <button>Generate Documents</button>
+        </a>
+    </div>)-->
+</div>
+
+{% endblock %}

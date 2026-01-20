@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Template Document Generator</h2>
+
+    <form method="POST">
+        <label><strong>Full Name</strong></label><br>
+        <input type="text" name="name" value="{{ name or '' }}" required style="width:100%; padding:8px;"><br><br>
+
+        <label><strong>Select Document Type</strong></label><br>
+        <select name="doc_type" required style="width:100%; padding:8px;">
+            <option value="">-- Choose --</option>
+            <option value="Attestation Letter" {% if doc_type=='Attestation Letter' %}selected{% endif %}>Letter of Attestation</option>
+            <option value="Undertaking Letter" {% if doc_type=='Undertaking Letter' %}selected{% endif %}>Letter of Undertaking</option>
+        </select><br><br>
+
+        <button type="submit">Generate</button>
+    </form>
+
+    {% if document %}
+        <hr>
+        <h3>Preview</h3>
+
+        <textarea rows="10" style="width:100%;" readonly>{{ document }}</textarea>
+
+        <form method="POST" action="{{ url_for('download_pdf') }}">
+            <!-- Pass the generated text directly -->
+            <input type="hidden" name="document" value="{{ document }}">
+            <br>
+            <button type="submit">Download as PDF</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('home') }}">← Back to Home</a>
+</div>
+
+{% endblock %}

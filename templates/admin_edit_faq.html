@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Add New FAQ</h2>
+
+<form method="POST" action="{{ url_for('admin_add_faq') }}">
+    <label>Category:</label><br>
+    <select name="category_id" required>
+        <option value="">-- Select Category --</option>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Question:</label><br>
+    <input type="text" name="question" required style="width:100%; padding:8px;"><br><br>
+
+    <label>Answer:</label><br>
+    <textarea name="answer" required rows="5" style="width:100%; padding:8px;"></textarea><br><br>
+
+    <button type="submit">Add FAQ</button>
+</form>
+
+<a href="{{ url_for('admin_faqs') }}">← Back to FAQ list</a>
+
+{% endblock %}

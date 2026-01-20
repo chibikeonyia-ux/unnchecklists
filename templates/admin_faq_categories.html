@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>FAQ Categories</h2>
+
+<!-- Add new category -->
+<div class="card">
+    <h3>Add Category</h3>
+    <form method="post">
+        <input type="text" name="name" placeholder="Category name" required>
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+<!-- Category list -->
+<div class="card">
+    <h3>Existing Categories</h3>
+
+    {% if categories %}
+        <ul>
+        {% for cat in categories %}
+            <li style="margin-bottom:10px;">
+                <form method="post" action="/admin/faq-categories/edit/{{ cat.id }}" style="display:inline;">
+                    <input type="text" name="new_name" value="{{ cat.name }}" required>
+                    <button type="submit">Save</button>
+                </form>
+
+                <a href="/admin/faq-categories/delete/{{ cat.id }}"
+                   onclick="return confirm('Delete this category?');"
+                   style="color:red; margin-left:10px;">
+                    Delete
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No categories created yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

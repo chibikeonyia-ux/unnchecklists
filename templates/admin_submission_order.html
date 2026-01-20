@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Submission Order Management</h2>
+
+    <!-- Department selector -->
+    <form method="get">
+        <label><strong>Select Department</strong></label><br>
+        <select name="department" onchange="this.form.submit()" required>
+            <option value="">-- choose department --</option>
+            {% for dept in departments %}
+                <option value="{{ dept }}"
+                    {% if dept == selected_department %}selected{% endif %}>
+                    {{ dept }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if selected_department %}
+
+<div class="card">
+    <h3>Current Order ({{ selected_department }})</h3>
+
+    {% if current_order %}
+        <ol>
+            {% for item in current_order %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p style="color:#777;">No submission order set yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>Update Submission Order</h3>
+    <p style="color:#555;">
+        Enter documents separated by commas, in the correct order.
+    </p>
+
+    <form method="post">
+        <input type="hidden" name="department" value="{{ selected_department }}">
+
+        <textarea
+            name="items"
+            rows="5"
+            style="width:100%; padding:10px;"
+            placeholder="Admission Letter, JAMB Result Slip, Birth Certificate"
+            required
+        >{{ current_order | join(", ") }}</textarea>
+
+        <br><br>
+        <button type="submit">Save Order</button>
+    </form>
+</div>
+
+{% else %}
+<div class="card">
+    <p style="color:#777;">Select a department to manage submission order.</p>
+</div>
+{% endif %}
+
+{% endblock %}

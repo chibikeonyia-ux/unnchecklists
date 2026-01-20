@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>{{ department }} Registration Checklist</h2>
+
+    <!-- Progress Bar -->
+    <div style="background:#eee; width:100%; border-radius:5px; margin-bottom:15px;">
+        <div id="progressBar"
+             style="background:#4caf50; width:0%; color:white; padding:5px; border-radius:5px;">
+            0%
+        </div>
+    </div>
+
+    <!-- Checklist -->
+    <ul style="list-style:none; padding:0;">
+        {% for item in items %}
+        <li style="margin-bottom:10px;">
+            <label>
+                <input type="checkbox"
+                       class="check-item"
+                       data-item="{{ item }}"
+                       {% if progress and progress.get(item) %}checked{% endif %}>
+                {{ item }}
+            </label>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <br>
+
+    <a href="/submission-order?department={{ department }}">
+        <button>View Submission Order</button>
+    </a>
+
+    <a href="/select-department">
+        <button>Back</button>
+    </a>
+</div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.check-item');
+    const progressBar = document.getElementById('progressBar');
+    const dept = "{{ department }}";
+    const savedProgress = {{ progress|tojson }};
+
+    checkboxes.forEach(cb => {
+        if (savedProgress[cb.dataset.item] === 1) {
+            cb.checked = true;
+        }
+
+        cb.addEventListener('change', () => {
+            fetch('/save-progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    department: dept,
+                    item: cb.dataset.item,
+                    checked: cb.checked ? 1 : 0
+                })
+            });
+
+            updateProgress();
+        });
+    });
+
+    function updateProgress() {
+        const total = checkboxes.length;
+        const checked = document.querySelectorAll('.check-item:checked').length;
+        const percent = (checked / total) * 100;
+
+        progressBar.style.width = percent + '%';
+        progressBar.textContent = Math.round(percent) + '%';
+    }
+
+    updateProgress();
+</script>
+
+
+{% endblock %}

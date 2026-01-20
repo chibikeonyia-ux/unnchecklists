@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select  Faculty</title>
+</head>
+<body>
+    <h1>Select Your Faculty</h1>
+    <ul>
+        {% for dept in departments %}
+        <li><a href="/checklist?department={{ dept }}">{{ dept }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title if title else "UNN Registration Assistant" }}</title>
+
+    <!-- REQUIRED FOR RESPONSIVENESS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        /* ---------------- NAVBAR ---------------- */
+        nav {
+            background: #222;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .admin-badge {
+            background: crimson;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+
+        /* ---------------- HEADER ---------------- */
+        header {
+            background-color: darkgreen;
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* ---------------- MAIN ---------------- */
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* ---------------- CARDS ---------------- */
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* ---------------- BUTTONS ---------------- */
+        button {
+            background-color: darkgreen;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: green;
+        }
+
+        /* ---------------- PROGRESS BAR ---------------- */
+        .progress-container {
+            width: 100%;
+            background-color: #eee;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 25px;
+            width: 0%;
+            background-color: #004080;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            color: white;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+        }
+
+        /* ---------------- LISTS ---------------- */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* ---------------- FLASH MESSAGES ---------------- */
+        .flash {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .flash.success { background: green; }
+        .flash.error { background: red; }
+
+        /* ---------------- RESPONSIVE ---------------- */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+
+            .nav-left {
+                margin-left: 0;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('faqs') }}">FAQ</a>
+
+    {% if session.get('user') %}
+        <a href="{{ url_for('select_department') }}">Checklist</a>
+        <a href="{{ url_for('generate_document') }}">Documents</a>
+    {% endif %}
+
+    {% if session.get('admin') %}
+        <a href="{{ url_for('admin_dashboard') }}">
+            Admin Dashboard <span class="admin-badge">ADMIN</span>
+        </a>
+    {% endif %}
+
+    <div class="nav-right">
+        {% if session.get('user') %}
+            <span>👤 {{ session.get('user') }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% elif session.get('admin') %}
+            <span>👤 {{ session.get('admin') }}</span>
+            <a href="{{ url_for('admin_logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+
+            <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <main>
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </main>
+  {% endif %}
+{% endwith %}
+
+<header>
+    <h1>UNN Registration Assistant</h1>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

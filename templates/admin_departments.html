@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Manage Departments</h2>
+    <p>Add, remove, and manage departments for student registration.</p>
+</div>
+
+<!-- ================= ADD DEPARTMENT ================= -->
+<div class="card">
+    <h3>Add New Department</h3>
+
+    <form method="POST">
+        <input
+            type="text"
+            name="name"
+            placeholder="Department name (e.g. Computer Science)"
+            required
+            style="padding:8px; width:70%;"
+        >
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+<!-- ================= DEPARTMENT LIST ================= -->
+<div class="card">
+    <h3>Existing Departments</h3>
+
+    {% if departments %}
+        <table width="100%" cellpadding="8" style="border-collapse: collapse;">
+            <tr style="background:#f1f1f1;">
+                <th align="left">Department</th>
+                <th align="left">Actions</th>
+            </tr>
+
+            {% for dept in departments %}
+            <tr style="border-bottom:1px solid #ddd;">
+                <td>{{ dept }}</td>
+                <td>
+                    <a href="{{ url_for('admin_checklist_items') }}?department={{ dept.name }}">
+                        <button>Checklist</button>
+                    </a>
+
+                    <a href="{{ url_for('admin_submission_order') }}?department={{ dept.name }}">
+                        <button>Submission Order</button>
+                    </a>
+
+                    <a href="{{ url_for('delete_department', department=dept.name) }}"
+                       onclick="return confirm('Delete this department?')">
+                        <button style="background:#c0392b;">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No departments added yet.</p>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+
+{% endblock %}

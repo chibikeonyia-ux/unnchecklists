@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Frequently Asked Questions</h2>
+
+{% if grouped_faqs %}
+    {% for category, faqs in grouped_faqs.items() %}
+        <h3 style="margin-top: 25px;">{{ category }}</h3>
+        <div class="accordion">
+            {% for faq in faqs %}
+            <div class="accordion-item">
+                <button class="accordion-header">{{ faq.question }}</button>
+                <div class="accordion-body">
+                    <p>{{ faq.answer }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No FAQs available yet.</p>
+{% endif %}
+
+<style>
+.accordion-header {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    background: #f4f4f4;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 5px;
+}
+
+.accordion-header.active {
+    background: #ddd;
+}
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: white;
+    padding: 0 12px;
+    border-left: 2px solid #eee;
+    border-right: 2px solid #eee;
+    border-bottom: 2px solid #eee;
+}
+</style>
+
+<script>
+document.querySelectorAll(".accordion-header").forEach(button => {
+    button.addEventListener("click", () => {
+        const body = button.nextElementSibling;
+        button.classList.toggle("active");
+
+        if (button.classList.contains("active")) {
+            body.style.maxHeight = body.scrollHeight + "px";
+        } else {
+            body.style.maxHeight = "0px";
+        }
+    });
+});
+</script>
+
+{% endblock %}
