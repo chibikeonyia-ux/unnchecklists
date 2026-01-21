@@ -6,10 +6,11 @@
 <!-- Add new category -->
 <div class="card">
     <h3>Add Category</h3>
-    <form method="post">
+    <form method="POST" action="{{ url_for('add_category_route') }}">
         <input type="text" name="name" placeholder="Category name" required>
-        <button type="submit">Add</button>
+        <button type="submit">Add Category</button>
     </form>
+
 </div>
 
 <!-- Category list -->
@@ -20,16 +21,19 @@
         <ul>
         {% for cat in categories %}
             <li style="margin-bottom:10px;">
-                <form method="post" action="/admin/faq-categories/edit/{{ cat.id }}" style="display:inline;">
-                    <input type="text" name="new_name" value="{{ cat.name }}" required>
-                    <button type="submit">Save</button>
+                <form method="POST" action="{{ url_for('update_category_route', cat_id=category.id) }}">
+                    <input type="text" name="name" value="{{ category.name }}" required>
+                    <button type="submit">Update</button>
                 </form>
 
-                <a href="/admin/faq-categories/delete/{{ cat.id }}"
-                   onclick="return confirm('Delete this category?');"
-                   style="color:red; margin-left:10px;">
-                    Delete
-                </a>
+
+                <form method="POST" action="{{ url_for('delete_category_route', category_id=category.id) }}"
+                      onsubmit="return confirm('Are you sure you want to delete this category?');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Delete
+                    </button>
+                </form>
+
             </li>
         {% endfor %}
         </ul>

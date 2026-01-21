@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import (
     init_db, get_db_connection,
@@ -15,7 +15,7 @@ from database import ensure_admin_exists
 from database import (
     get_faqs, add_faq, delete_faq, update_faq,
     get_templates, get_template_by_name, save_template,
-    add_category, get_categories, get_faq_by_id, delete_category, get_faqs,
+    add_category, update_category, get_categories, get_faq_by_id, delete_category, get_faqs,
 )
 
 
@@ -56,14 +56,14 @@ def register():
         phone = request.form.get("phone")
 
         if get_user(username):
-            error = "Username already exists"
+            flash("Username already exists")
         else:
             # password will be hashed inside create_user()
             create_user(username, password, email, phone)
             session["user"] = username
             return redirect(url_for("select_department"))
 
-    return render_template("register.html", error=error)
+    return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -77,12 +77,12 @@ def login():
         user = get_user(username)
 
         if not user or not check_password_hash(user["password"], password):
-            error = "Invalid login details"
+            flash("Invalid login details")
         else:
             session["user"] = username
             return redirect(url_for("select_department"))
 
-    return render_template("login.html", error=error)
+    return render_template("login.html")
 
 
 @app.route("/logout")
@@ -105,12 +105,12 @@ def admin_login():
         admin = get_admin(username)
 
         if not admin or not check_password_hash(admin["password"], password):
-            error = "Invalid admin credentials"
+            flash("Invalid admin credentials")
         else:
             session["admin"] = username
             return redirect("/admin/dashboard")
 
-    return render_template("admin_login.html", error=error)
+    return render_template("admin_login.html")
 
 
 @app.route("/admin/logout")
@@ -488,6 +488,50 @@ def admin_faq_categories():
 
     categories = get_categories()
     return render_template("admin_faq_categories.html", categories=categories)
+
+@app.route("/admin/delete-category/<int:category_id>", methods=["POST"])
+def delete_category_route(category_id):
+    if "admin" not in session:
+        flash("Unauthorized access", "error")
+        return redirect(url_for("admin_login"))
+
+    delete_category(category_id)
+    flash("Category deleted successfully", "success")
+    return redirect(url_for("manage_categories"))
+
+
+@app.route("/admin/add-category", methods=["POST"])
+def add_category_route():
+    if "admin" not in session:
+        flash("Unauthorized access", "error")
+        return redirect(url_for("admin_login"))
+
+    name = request.form.get("name", "").strip()
+
+    if not name:
+        flash("Category name cannot be empty", "error")
+        return redirect(url_for("manage_categories"))
+
+    add_category(name)
+    flash("Category added successfully", "success")
+    return redirect(url_for("manage_categories"))
+
+
+@app.route("/admin/update-category/<int:cat_id>", methods=["POST"])
+def update_category_route(cat_id):
+    if "admin" not in session:
+        flash("Unauthorized access", "error")
+        return redirect(url_for("admin_login"))
+
+    new_name = request.form.get("name", "").strip()
+
+    if not new_name:
+        flash("Category name cannot be empty", "error")
+        return redirect(url_for("manage_categories"))
+
+    update_category(cat_id, new_name)
+    flash("Category updated successfully", "success")
+    return redirect(url_for("manage_categories"))
 
 # -----------------------------
 # RUN APP
