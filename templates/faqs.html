@@ -1,68 +1,91 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Frequently Asked Questions</h2>
+<!-- FAQ HERO: Intro and purpose -->
+<section class="card">
+    <h2>Frequently Asked Questions</h2>
+    <p class="section-lead">
+        Quick answers for common UNN registration concerns, plus department-specific guidance below.
+    </p>
+</section>
 
-{% if grouped_faqs %}
-    {% for category, faqs in grouped_faqs.items() %}
-        <h3 style="margin-top: 25px;">{{ category }}</h3>
-        <div class="accordion">
-            {% for faq in faqs %}
-            <div class="accordion-item">
-                <button class="accordion-header">{{ faq.question }}</button>
-                <div class="accordion-body">
-                    <p>{{ faq.answer }}</p>
-                </div>
-            </div>
-            {% endfor %}
+<!-- FAQ QUICK ANSWERS: Common UNN registration questions -->
+<section class="section">
+    <h3 class="section-title">Common UNN registration questions</h3>
+
+    <div class="faq-grid">
+        <div class="faq-card">
+            <h4>What documents should I bring?</h4>
+            <ul class="list">
+                <li>Admission letter printout from the UNN portal or JAMB.</li>
+                <li>O'Level result(s) and any supporting certificates.</li>
+                <li>Birth certificate or declaration of age.</li>
+                <li>Local government identification or attestation letter.</li>
+            </ul>
         </div>
-    {% endfor %}
-{% else %}
-    <p>No FAQs available yet.</p>
-{% endif %}
 
-<style>
-.accordion-header {
-    width: 100%;
-    text-align: left;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    background: #f4f4f4;
-    cursor: pointer;
-    outline: none;
-    margin-bottom: 5px;
-}
+        <div class="faq-card">
+            <h4>When do I pay the acceptance fee?</h4>
+            <p class="faq-meta">
+                Acceptance fee windows change each session. Pay only within the official portal dates.
+            </p>
+            <ul class="list">
+                <li>Confirm the deadline on the UNN portal.</li>
+                <li>Print your receipt and keep it for clearance.</li>
+            </ul>
+        </div>
 
-.accordion-header.active {
-    background: #ddd;
-}
+        <div class="faq-card">
+            <h4>What happens at faculty clearance?</h4>
+            <ul class="list">
+                <li>Officials verify your originals against uploads.</li>
+                <li>You may complete departmental forms or interviews.</li>
+                <li>Bring all receipts and signed documents.</li>
+            </ul>
+        </div>
 
-.accordion-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background: white;
-    padding: 0 12px;
-    border-left: 2px solid #eee;
-    border-right: 2px solid #eee;
-    border-bottom: 2px solid #eee;
-}
-</style>
+        <div class="faq-card">
+            <h4>Can I register courses before clearance?</h4>
+            <p class="faq-meta">
+                Most faculties require clearance first. Follow your departmental timeline.
+            </p>
+            <ul class="list">
+                <li>Wait for clearance approval on the portal.</li>
+                <li>Use the checklist here to track each step.</li>
+            </ul>
+        </div>
+    </div>
+</section>
 
-<script>
-document.querySelectorAll(".accordion-header").forEach(button => {
-    button.addEventListener("click", () => {
-        const body = button.nextElementSibling;
-        button.classList.toggle("active");
+<!-- FAQ ACCORDION: Department-specific FAQs -->
+<section class="section">
+    <h3 class="section-title">Department and faculty FAQs</h3>
+    <p class="section-lead">
+        These answers are maintained by admins and may vary by department.
+    </p>
 
-        if (button.classList.contains("active")) {
-            body.style.maxHeight = body.scrollHeight + "px";
-        } else {
-            body.style.maxHeight = "0px";
-        }
-    });
-});
-</script>
+    {% if grouped_faqs %}
+        {% for category, faqs in grouped_faqs.items() %}
+            <p class="faq-meta"><strong>{{ category }}</strong></p>
+            <div class="accordion">
+                {% for faq in faqs %}
+                <div class="accordion-item">
+                    <button class="accordion-header" type="button" aria-expanded="false">
+                        {{ faq.question }}
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <p>{{ faq.answer }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            <p class="section-lead">No department FAQs yet. Check back or contact your faculty office.</p>
+        </div>
+    {% endif %}
+</section>
 
 {% endblock %}

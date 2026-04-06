@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Admin Setup</h2>
+    <p class="section-lead">Create the first admin account. This page will lock after setup.</p>
+
+    <form method="POST" class="stack" data-submit-message="Creating admin...">
+        <div class="form-field">
+            <label for="setupToken">Setup token</label>
+            <input id="setupToken" type="password" name="token" placeholder="Enter setup token" required>
+            <div class="helper-text">Set `ADMIN_SETUP_TOKEN` in your environment to enable this page.</div>
+        </div>
+
+        <div class="form-field">
+            <label for="adminUsername">Admin username</label>
+            <input id="adminUsername" type="text" name="username" placeholder="Admin username" required>
+        </div>
+
+        <div class="form-field">
+            <label for="adminPassword">Admin password</label>
+            <input id="adminPassword" type="password" name="password" placeholder="Create a strong password" required>
+        </div>
+
+        <button type="submit">Create Admin</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -3,19 +3,19 @@
 
 <div class="card">
     <h2>Submission Order Management</h2>
+    <p class="section-lead">Set the order students should arrange documents for clearance.</p>
 
-    <!-- Department selector -->
-    <form method="get">
-        <label><strong>Select Department</strong></label><br>
-        <select name="department" onchange="this.form.submit()" required>
+    <form method="get" class="form-field" data-no-feedback="true">
+        <label for="deptSelect">Select Department</label>
+        <select id="deptSelect" name="department" onchange="this.form.submit()" required>
             <option value="">-- choose department --</option>
             {% for dept in departments %}
-                <option value="{{ dept }}"
-                    {% if dept == selected_department %}selected{% endif %}>
+                <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>
                     {{ dept }}
                 </option>
             {% endfor %}
         </select>
+        <span class="helper-text">Choose a department to load or update its submission order.</span>
     </form>
 </div>
 
@@ -25,41 +25,32 @@
     <h3>Current Order ({{ selected_department }})</h3>
 
     {% if current_order %}
-        <ol>
+        <ol class="list">
             {% for item in current_order %}
                 <li>{{ item }}</li>
             {% endfor %}
         </ol>
     {% else %}
-        <p style="color:#777;">No submission order set yet.</p>
+        <p class="helper-text">No submission order set yet.</p>
     {% endif %}
 </div>
 
 <div class="card">
     <h3>Update Submission Order</h3>
-    <p style="color:#555;">
-        Enter documents separated by commas, in the correct order.
-    </p>
+    <p class="section-lead">Enter documents separated by commas, in the correct order.</p>
 
-    <form method="post">
+    <form method="post" class="stack" data-submit-message="Saving submission order...">
         <input type="hidden" name="department" value="{{ selected_department }}">
 
-        <textarea
-            name="items"
-            rows="5"
-            style="width:100%; padding:10px;"
-            placeholder="Admission Letter, JAMB Result Slip, Birth Certificate"
-            required
-        >{{ current_order | join(", ") }}</textarea>
+        <textarea name="items" rows="5" placeholder="Admission Letter, JAMB Result Slip, Birth Certificate" required>{{ current_order | join(", ") }}</textarea>
 
-        <br><br>
         <button type="submit">Save Order</button>
     </form>
 </div>
 
 {% else %}
 <div class="card">
-    <p style="color:#777;">Select a department to manage submission order.</p>
+    <p class="helper-text">Select a department to manage submission order.</p>
 </div>
 {% endif %}
 

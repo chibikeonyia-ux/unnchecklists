@@ -3,9 +3,8 @@
 
 <div class="card">
     <h2>Document Filing Order</h2>
-    <p style="color:#555;">
-        This is the recommended order to arrange your documents
-        before submitting them at your Faculty.
+    <p class="section-lead">
+        This is the recommended order to arrange your documents before submitting them at your faculty.
     </p>
 
     <h3>Faculty: {{ department }}</h3>
@@ -13,21 +12,18 @@
 
 <div class="card">
     {% if order %}
-        <ol style="line-height:1.8;">
+        <ol class="list">
             {% for item in order %}
                 <li>{{ item }}</li>
             {% endfor %}
         </ol>
     {% else %}
-        <p style="color:#777;">
-            No submission order has been set for this Faculty yet.
-            Please check back later.
+        <p class="helper-text">
+            No submission order has been set for this faculty yet. Please check back later.
         </p>
     {% endif %}
 </div>
 
-<a href="{{ url_for('checklist', department =department) }}">
-    ← Back to Checklist
-</a>
+<a class="link-muted" href="{{ url_for('checklist', department=department) }}">&larr; Back to Checklist</a>
 
 {% endblock %}

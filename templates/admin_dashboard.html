@@ -3,71 +3,150 @@
 
 <div class="card">
     <h2>Admin Dashboard</h2>
-    <p>Welcome, <strong>{{ session.get('admin') }}</strong>.
-       Manage the system from here.</p>
+    <p class="section-lead">Welcome, <strong>{{ session.get('admin') }}</strong>. Manage the system from here.</p>
 </div>
 
-<!-- ===================== QUICK STATS ===================== -->
 <div class="card">
     <h3>Overview</h3>
-    <ul>
-        <li><strong>Total Users:</strong> {{ total_users }}</li>
-        <li><strong>Total Departments:</strong> {{ total_departments }}</li>
-        <li><strong>Total FAQs:</strong> {{ total_faqs }}</li>
-    </ul>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">{{ total_users }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Departments</div>
+            <div class="stat-value">{{ total_departments }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">FAQ Entries</div>
+            <div class="stat-value">{{ total_faqs }}</div>
+        </div>
+    </div>
 </div>
 
-<!-- ===================== USER CONTACT INFO ===================== -->
 <div class="card">
     <h3>User Contacts</h3>
+    <div class="table-toolbar">
+        <p class="helper-text">Search by username, email, or phone.</p>
+        <input class="input table-search" type="search" placeholder="Search users" data-table-search data-table-target="usersTable">
+    </div>
 
     {% if users %}
-        <table width="100%" cellpadding="8" style="border-collapse: collapse;">
-            <tr style="background:#f1f1f1;">
-                <th align="left">Username</th>
-                <th align="left">Email</th>
-                <th align="left">Phone</th>
-            </tr>
-
-            {% for user in users %}
-            <tr style="border-bottom:1px solid #ddd;">
-                <td>{{ user.username }}</td>
-                <td>{{ user.email or "—" }}</td>
-                <td>{{ user.phone or "—" }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="table-wrap">
+            <table class="table" id="usersTable" data-table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email or "-" }}</td>
+                        <td>{{ user.phone or "-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No users found.</p>
+        <p class="helper-text">No users found.</p>
     {% endif %}
 </div>
 
-<!-- ===================== DEPARTMENT MANAGEMENT ===================== -->
 <div class="card">
-    <h3>Departments</h3>
+    <h3>User Checklist Progress</h3>
+    <div class="table-toolbar">
+        <p class="helper-text">Track how far each student has progressed per department.</p>
+        <input class="input table-search" type="search" placeholder="Search progress" data-table-search data-table-target="progressTable">
+    </div>
 
-    <a href="{{ url_for('admin_departments') }}">
-        <button>Manage Departments</button>
-    </a>
-
-    <p style="margin-top:10px;">
-        Add departments and control submission order.
-    </p>
+    {% if progress_overview %}
+        <div class="table-wrap">
+            <table class="table" id="progressTable" data-table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Department</th>
+                        <th data-sort-type="number">Completed</th>
+                        <th data-sort-type="number">Total Items</th>
+                        <th data-sort-type="number">Completion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in progress_overview %}
+                    <tr>
+                        <td>{{ row.username }}</td>
+                        <td>{{ row.department }}</td>
+                        <td data-sort-value="{{ row.completed }}">{{ row.completed }}</td>
+                        <td data-sort-value="{{ row.total }}">{{ row.total }}</td>
+                        <td data-sort-value="{{ row.percent }}">
+                            {% if row.percent >= 70 %}
+                                <span class="pill success">{{ row.percent }}%</span>
+                            {% elif row.percent >= 40 %}
+                                <span class="pill warning">{{ row.percent }}%</span>
+                            {% else %}
+                                <span class="pill">{{ row.percent }}%</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if users_no_progress %}
+            <p class="helper-text">No checklist activity yet for: {{ users_no_progress | join(", ") }}.</p>
+        {% endif %}
+    {% else %}
+        <p class="helper-text">No checklist progress recorded yet.</p>
+    {% endif %}
 </div>
 
-<!-- ===================== FAQ MANAGEMENT ===================== -->
 <div class="card">
-    <h3>FAQs</h3>
+    <h3>Department Progress Snapshot</h3>
+    <div class="table-toolbar">
+        <p class="helper-text">Overview of checklist activity across departments.</p>
+        <input class="input table-search" type="search" placeholder="Search departments" data-table-search data-table-target="deptProgressTable">
+    </div>
 
-    <a href="{{ url_for('admin_faqs') }}">
-        <button>Manage FAQs</button>
-    </a>
-
-    <p style="margin-top:10px;">
-        Edit questions users see on the FAQ page.
-    </p>
+    {% if department_stats %}
+        <div class="table-wrap">
+            <table class="table" id="deptProgressTable" data-table>
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th data-sort-type="number">Checklist Items</th>
+                        <th data-sort-type="number">Students Started</th>
+                        <th data-sort-type="number">Avg Completion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in department_stats %}
+                    <tr>
+                        <td>{{ row.department }}</td>
+                        <td data-sort-value="{{ row.total_items }}">{{ row.total_items }}</td>
+                        <td data-sort-value="{{ row.students_started }}">{{ row.students_started }}</td>
+                        <td data-sort-value="{{ row.avg_completion }}">{{ row.avg_completion }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="helper-text">No department activity to show yet.</p>
+    {% endif %}
 </div>
 
-<!-- ===================== TEMPLATE MANAGEMENT ===================== --
+<div class="card">
+    <h3>Quick Actions</h3>
+    <div class="action-row">
+        <a class="btn btn-outline" href="{{ url_for('admin_departments') }}">Manage Departments</a>
+        <a class="btn btn-outline" href="{{ url_for('admin_faqs') }}">Manage FAQs</a>
+        <a class="btn btn-outline" href="{{ url_for('admin_checklist_items') }}">Checklist Items</a>
+    </div>
+</div>
 
 {% endblock %}

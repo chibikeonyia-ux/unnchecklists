@@ -1,15 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Select  Faculty</title>
-</head>
-<body>
-    <h1>Select Your Faculty</h1>
-    <ul>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <h2>Select Your Faculty</h2>
+    <p class="section-lead">Choose your faculty to view the registration checklist.</p>
+
+    <div class="stack" style="margin-top: 18px;">
         {% for dept in departments %}
-        <li><a href="/checklist?department={{ dept }}">{{ dept }}</a></li>
+            <a class="btn btn-outline btn-block" href="/checklist?department={{ dept }}">
+                {{ dept }}
+            </a>
         {% endfor %}
-    </ul>
-    <a href="/">← Back to Home</a>
-</body>
-</html>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a class="link-muted" href="/">&larr; Back to Home</a>
+    </div>
+</div>
+
+{% endblock %}

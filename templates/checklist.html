@@ -1,82 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card">
+<div class="card" data-checklist data-department="{{ department }}" data-progress='{{ progress|tojson }}'>
+    <!-- CHECKLIST HEADER: Context and instructions -->
     <h2>{{ department }} Registration Checklist</h2>
+    <p class="section-lead">Tick each item as you complete it. Progress saves automatically.</p>
 
-    <!-- Progress Bar -->
-    <div style="background:#eee; width:100%; border-radius:5px; margin-bottom:15px;">
-        <div id="progressBar"
-             style="background:#4caf50; width:0%; color:white; padding:5px; border-radius:5px;">
-            0%
-        </div>
+    <!-- PROGRESS META: Step indicator and completion summary -->
+    <div class="progress-meta" aria-live="polite">
+        <span>Completed <strong data-progress-count>0</strong> of <strong data-progress-total>0</strong></span>
+        <span>Current step: <strong data-current-step>1</strong></span>
     </div>
 
-    <!-- Checklist -->
-    <ul style="list-style:none; padding:0;">
+    <!-- PROGRESS BAR: Shows checklist completion -->
+    <div class="progress-track">
+        <div id="progressBar" class="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+    <p class="helper-text">Tip: Tap any item to mark it done. You can uncheck if you need to revisit it.</p>
+
+    <!-- CHECKLIST ITEMS: User progress tracking -->
+    <ul class="checklist-list">
         {% for item in items %}
-        <li style="margin-bottom:10px;">
+        <li class="checklist-item">
             <label>
                 <input type="checkbox"
                        class="check-item"
                        data-item="{{ item }}"
+                       title="Mark this item as done. Progress saves automatically."
+                       aria-label="Mark {{ item }} complete"
                        {% if progress and progress.get(item) %}checked{% endif %}>
-                {{ item }}
+                <span class="step-badge">{{ loop.index }}</span>
+                <span class="checklist-text">{{ item }}</span>
             </label>
         </li>
         {% endfor %}
     </ul>
 
-    <br>
-
-    <a href="/submission-order?department={{ department }}">
-        <button>View Submission Order</button>
-    </a>
-
-    <a href="/select-department">
-        <button>Back</button>
-    </a>
+    <!-- CHECKLIST ACTIONS: Submission order and navigation -->
+    <div class="hero-cta">
+        <a class="btn btn-primary" href="/submission-order?department={{ department }}">View Submission Order</a>
+        <a class="btn btn-outline" href="/select-department">Back to Departments</a>
+    </div>
 </div>
-
-<script>
-    const checkboxes = document.querySelectorAll('.check-item');
-    const progressBar = document.getElementById('progressBar');
-    const dept = "{{ department }}";
-    const savedProgress = {{ progress|tojson }};
-
-    checkboxes.forEach(cb => {
-        if (savedProgress[cb.dataset.item] === 1) {
-            cb.checked = true;
-        }
-
-        cb.addEventListener('change', () => {
-            fetch('/save-progress', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    department: dept,
-                    item: cb.dataset.item,
-                    checked: cb.checked ? 1 : 0
-                })
-            });
-
-            updateProgress();
-        });
-    });
-
-    function updateProgress() {
-        const total = checkboxes.length;
-        const checked = document.querySelectorAll('.check-item:checked').length;
-        const percent = (checked / total) * 100;
-
-        progressBar.style.width = percent + '%';
-        progressBar.textContent = Math.round(percent) + '%';
-    }
-
-    updateProgress();
-</script>
-
 
 {% endblock %}

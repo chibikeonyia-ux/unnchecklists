@@ -2,43 +2,125 @@
 
 {% block content %}
 
-<div class="card">
-    <h2>Welcome to UNN Registration Assistant</h2>
+<!-- HERO SECTION: Purpose and primary call-to-action -->
+<section class="hero">
+    <div class="hero-grid">
+        <div>
+            <div class="hero-kicker">UNN Registration Assistant</div>
+            <h2 class="hero-title">Finish UNN registration with clarity and confidence.</h2>
+            <p class="hero-subtitle">
+                Track required documents, follow each step in order, and avoid missing department deadlines.
+            </p>
 
-    {% if session.get('user') %}
-        <p>Choose your Faculty to begin your registration process.</p>
+            <div class="hero-cta">
+                {% if session.get('user') %}
+                    <a class="btn btn-primary" href="{{ url_for('select_department') }}">Continue Registration</a>
+                    <a class="btn btn-outline" href="{{ url_for('faqs') }}">View FAQs</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ url_for('login') }}">Login</a>
+                    <a class="btn btn-outline" href="{{ url_for('register') }}">Create Account</a>
+                {% endif %}
+            </div>
 
-        <a href="{{ url_for('select_department') }}">
-            <button>Start Registration</button>
-        </a>
-    {% else %}
-        <p>
-            This tool helps new students understand registration steps,
-            required documents, and submission order.
-        </p>
+            <p class="note" style="margin-top: 16px;">
+                Always confirm dates and portal updates with official UNN notices and your faculty office.
+            </p>
+        </div>
 
-        <p>Please login or create an account to continue.</p>
+        <div class="hero-card">
+            <h3>What this app helps you do</h3>
+            <ul class="clean-list">
+                <li>Prepare the right documents before clearance.</li>
+                <li>Follow the registration steps for your department.</li>
+                <li>Track checklist progress as you complete tasks.</li>
+                <li>Generate key documents and PDF copies.</li>
+            </ul>
+        </div>
+    </div>
+</section>
 
-        <a href="{{ url_for('login') }}">
-            <button>Login</button>
-        </a>
+<!-- STEPS SECTION: Documents, steps, and deadlines -->
+<section id="steps" class="section">
+    <h3 class="section-title">Step-by-step UNN registration guide</h3>
+    <p class="section-lead">
+        Use this guide as your quick reference, then log in to save progress on your checklist.
+    </p>
 
-        <a href="{{ url_for('register') }}">
-            <button>Create Account</button>
-        </a>
-    {% endif %}
+    <div class="steps-grid">
+        <div class="card step-card">
+            <div class="step-number">1</div>
+            <h4>Documents to prepare</h4>
+            <ul class="list">
+                <li>Admission letter printout from the UNN portal or JAMB.</li>
+                <li>O'Level result(s) and supporting certificates.</li>
+                <li>Birth certificate or declaration of age.</li>
+                <li>Local government identification or attestation.</li>
+                <li>Passport photographs and payment receipts.</li>
+            </ul>
+        </div>
 
-    <!--(<div style="margin-top:20px;">
-        <a href="{{ url_for('faqs') }}">
-            <button>View FAQs</button>
-        </a>
+        <div class="card step-card">
+            <div class="step-number">2</div>
+            <h4>Registration steps</h4>
+            <ol class="list">
+                <li>Accept admission and pay the acceptance fee on the portal.</li>
+                <li>Complete your biodata form and upload required documents.</li>
+                <li>Attend faculty and departmental clearance with originals.</li>
+                <li>Register courses and print your final slips.</li>
+            </ol>
+        </div>
+
+        <div class="card step-card">
+            <div class="step-number">3</div>
+            <h4>Deadlines to watch</h4>
+            <ul class="list">
+                <li>Acceptance fee window (check the portal for exact dates).</li>
+                <li>Faculty clearance period and final signature dates.</li>
+                <li>Course registration close date after clearance.</li>
+                <li>Hostel or ID card windows if applicable.</li>
+            </ul>
+        </div>
     </div>
 
-    <div style="margin-top:20px;">
-        <a href="{{ url_for('generate_document') }}">
-            <button>Generate Documents</button>
-        </a>
-    </div>)-->
-</div>
+    {% if not session.get('user') %}
+        <div class="card" style="margin-top: 18px;">
+            <h4 style="margin-top: 0;">Ready to start?</h4>
+            <p class="section-lead" style="margin-bottom: 12px;">
+                Create an account to save your checklist and see department-specific steps.
+            </p>
+            <div class="hero-cta">
+                <a class="btn btn-primary" href="{{ url_for('register') }}">Create Account</a>
+                <a class="btn btn-outline" href="{{ url_for('login') }}">Login</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<!-- CONTACT SECTION: Support and guidance -->
+<section id="contact" class="section">
+    <div class="card">
+        <h3 class="section-title">Contact and support</h3>
+        <p class="section-lead">
+            If anything is unclear, reach out early so you do not miss your registration window.
+        </p>
+
+        <div class="contact-grid">
+            <div class="contact-item">
+                <h4>Faculty Registration Desk</h4>
+                <p>Ask about clearance dates, required forms, and approval signatures.</p>
+            </div>
+
+            <div class="contact-item">
+                <h4>Departmental Office</h4>
+                <p>Confirm course registration steps and submission order for your department.</p>
+            </div>
+
+            <div class="contact-item">
+                <h4>ICT and Portal Help</h4>
+                <p>Report portal issues or payment confirmations that are delayed.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

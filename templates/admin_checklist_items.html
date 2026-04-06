@@ -2,66 +2,98 @@
 {% block content %}
 
 <div class="card">
+    <!-- ADMIN CHECKLIST: Department selector -->
     <h2>Checklist Items Management</h2>
+    <p class="section-lead">Add clear, action-based items that students can easily tick off.</p>
 
-    <!-- Department selector -->
-    <form method="get" action="{{ url_for('admin_checklist_items') }}">
-        <label><strong>Select Department</strong></label><br>
-        <select name="department" onchange="this.form.submit()" required>
-            <option value="">-- choose department --</option>
-            {% for dept in departments %}
-                <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>
-                    {{ dept }}
-                </option>
-            {% endfor %}
-        </select>
+    <form method="get" action="{{ url_for('admin_checklist_items') }}" data-no-feedback="true">
+        <div class="form-field">
+            <label for="departmentSelect">Select Department</label>
+            <select id="departmentSelect"
+                    name="department"
+                    class="input"
+                    onchange="this.form.submit()"
+                    title="Choose a department to view or add checklist items"
+                    required>
+                <option value="">-- choose department --</option>
+                {% for dept in departments %}
+                    <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>
+                        {{ dept }}
+                    </option>
+                {% endfor %}
+            </select>
+            <div class="helper-text">Selecting a department loads its checklist items.</div>
+        </div>
     </form>
 </div>
 
 {% if selected_department %}
 <div class="card">
+    <!-- ADMIN CHECKLIST: Add new item -->
     <h3>Add Checklist Item ({{ selected_department }})</h3>
 
-    <form method="post" action="{{ url_for('admin_checklist_items') }}">
+    <form method="post" action="{{ url_for('admin_checklist_items') }}" data-submit-message="Adding checklist item...">
         <input type="hidden" name="department" value="{{ selected_department }}">
 
-        <input
-            type="text"
-            name="item"
-            placeholder="e.g. Upload JAMB Result Slip"
-            required
-            style="width:100%; padding:8px; margin-bottom:10px;"
-        >
+        <div class="form-field">
+            <label for="itemInput">Checklist item</label>
+            <input
+                id="itemInput"
+                type="text"
+                name="item"
+                class="input"
+                placeholder="e.g. Upload JAMB Result Slip"
+                title="Use a short, action-based instruction"
+                required
+            >
+            <div class="helper-text">Keep items short and measurable. Example: Print course form.</div>
+        </div>
 
         <button type="submit">Add Item</button>
     </form>
 </div>
 
 <div class="card">
+    <!-- ADMIN CHECKLIST: Existing items -->
     <h3>Existing Checklist Items</h3>
+    <div class="table-toolbar">
+        <p class="helper-text">Search checklist items for this department.</p>
+        <input class="input table-search" type="search" placeholder="Search checklist items" data-table-search data-table-target="checklistItemsTable">
+    </div>
 
     {% if items %}
-        <ul>
-            {% for item in items %}
-                <li style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>{{ item["item"] }}</span>
-
-                    <a href="{{ url_for('admin_delete_checklist_item', item_id=item['id']) }}"
-                       onclick="return confirm('Delete this checklist item?')"
-                       style="color:red;">
-                        Delete
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="table-wrap">
+            <table class="table" id="checklistItemsTable" data-table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th data-sort="false">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item["item"] }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_delete_checklist_item', item_id=item['id']) }}"
+                               onclick="return confirm('Delete this checklist item?')"
+                               class="danger-link">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p style="color:#777;">No checklist items yet for this department.</p>
+        <p class="helper-text">No checklist items yet for this department.</p>
     {% endif %}
 </div>
 
 {% else %}
 <div class="card">
-    <p style="color:#777;">Select a department to manage checklist items.</p>
+    <p class="helper-text">Select a department to manage checklist items.</p>
 </div>
 {% endif %}
 

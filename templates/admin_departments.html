@@ -3,61 +3,63 @@
 
 <div class="card">
     <h2>Manage Departments</h2>
-    <p>Add, remove, and manage departments for student registration.</p>
+    <p class="section-lead">Add, remove, and manage departments for student registration.</p>
 </div>
 
-<!-- ================= ADD DEPARTMENT ================= -->
 <div class="card">
     <h3>Add New Department</h3>
 
-    <form method="POST">
+    <form method="POST" class="action-row" data-submit-message="Adding department...">
         <input
             type="text"
             name="name"
+            class="input"
             placeholder="Department name (e.g. Computer Science)"
             required
-            style="padding:8px; width:70%;"
+            style="flex: 1; min-width: 220px;"
         >
         <button type="submit">Add</button>
     </form>
 </div>
 
-<!-- ================= DEPARTMENT LIST ================= -->
 <div class="card">
     <h3>Existing Departments</h3>
+    <div class="table-toolbar">
+        <p class="helper-text">Search departments or use the action buttons to manage each list.</p>
+        <input class="input table-search" type="search" placeholder="Search departments" data-table-search data-table-target="departmentsTable">
+    </div>
 
     {% if departments %}
-        <table width="100%" cellpadding="8" style="border-collapse: collapse;">
-            <tr style="background:#f1f1f1;">
-                <th align="left">Department</th>
-                <th align="left">Actions</th>
-            </tr>
-
-            {% for dept in departments %}
-            <tr style="border-bottom:1px solid #ddd;">
-                <td>{{ dept }}</td>
-                <td>
-                    <a href="{{ url_for('admin_checklist_items') }}?department={{ dept.name }}">
-                        <button>Checklist</button>
-                    </a>
-
-                    <a href="{{ url_for('admin_submission_order') }}?department={{ dept.name }}">
-                        <button>Submission Order</button>
-                    </a>
-
-                    <a href="{{ url_for('delete_department', department=dept.name) }}"
-                       onclick="return confirm('Delete this department?')">
-                        <button style="background:#c0392b;">Delete</button>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="table-wrap">
+            <table class="table" id="departmentsTable" data-table>
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th data-sort="false">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in departments %}
+                    <tr>
+                        <td>{{ dept }}</td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="btn btn-outline" href="{{ url_for('admin_checklist_items') }}?department={{ dept }}">Checklist</a>
+                                <a class="btn btn-outline" href="{{ url_for('admin_submission_order') }}?department={{ dept }}">Submission Order</a>
+                                <a class="btn btn-danger" href="{{ url_for('delete_department', department=dept) }}"
+                                   onclick="return confirm('Delete this department?')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No departments added yet.</p>
+        <p class="helper-text">No departments added yet.</p>
     {% endif %}
 </div>
 
-<a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+<a class="link-muted" href="{{ url_for('admin_dashboard') }}">&larr; Back to Dashboard</a>
 
 {% endblock %}

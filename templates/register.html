@@ -3,28 +3,40 @@
 
 <div class="card">
     <h2>Create Account</h2>
+    <p class="section-lead">Create a profile to save progress and access department steps.</p>
 
     {% if error %}
-        <p style="color:red;">{{ error }}</p>
+        <p class="error-text">{{ error }}</p>
     {% endif %}
 
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <br><br>
+    <form method="POST" class="stack" data-submit-message="Creating your account...">
+        <div class="form-field">
+            <label for="regUsername">Username</label>
+            <input id="regUsername" type="text" name="username" placeholder="Choose a username" required>
+        </div>
 
-        <input type="email" name="email" placeholder="Email address" required>
-        <br><br>
+        <div class="form-field">
+            <label for="regEmail">Email address</label>
+            <input id="regEmail" type="email" name="email" placeholder="you@example.com" required>
+        </div>
 
-        <input type="text" name="phone" placeholder="Phone number" required>
-        <br><br>
+        <div class="form-field">
+            <label for="regPhone">Phone number</label>
+            <input id="regPhone" type="text" name="phone" placeholder="0800 000 0000" required>
+        </div>
 
-        <input type="password" name="password" placeholder="Password" required>
-        <br><br>
+        <div class="form-field">
+            <label for="regPassword">Password</label>
+            <input id="regPassword" type="password" name="password" placeholder="Create a secure password" required>
+        </div>
 
         <button type="submit">Register</button>
     </form>
 
-    <p>Already have an account? <a href="/login">Login</a></p>
+    <p class="helper-text">
+        Already have an account?
+        <a class="link-muted" href="{{ url_for('login') }}">Login</a>
+    </p>
 </div>
 
 {% endblock %}

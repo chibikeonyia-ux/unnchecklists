@@ -3,18 +3,18 @@
 
 <div class="card">
     <h2>Select Your Faculty</h2>
-    <p>Choose your Faculty to view your registration checklist.</p>
+    <p class="section-lead">Choose your faculty to view the department-specific checklist.</p>
 
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+    <div class="stack" style="margin-top: 18px;">
         {% for dept in departments %}
-            <a href="{{ url_for('checklist') }}?department={{ dept|urlencode }}">
-                <button style="width:100%;">{{ dept }}</button>
+            <a class="btn btn-outline btn-block" href="{{ url_for('checklist') }}?department={{ dept|urlencode }}">
+                {{ dept }}
             </a>
         {% endfor %}
     </div>
 
-    <div style="margin-top:25px;">
-        <a href="{{ url_for('home') }}">← Back to Home</a>
+    <div style="margin-top: 20px;">
+        <a class="link-muted" href="{{ url_for('home') }}">&larr; Back to Home</a>
     </div>
 </div>
 

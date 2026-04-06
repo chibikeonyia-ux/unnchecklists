@@ -3,28 +3,25 @@
 
 <div class="card">
     <h2>Login</h2>
+    <p class="section-lead">Sign in to continue your UNN registration checklist.</p>
 
-    <form method="POST">
-        <input type="text"
-               name="username"
-               placeholder="Enter your username"
-               required>
+    <form method="POST" class="stack" data-submit-message="Signing you in...">
+        <div class="form-field">
+            <label for="loginUsername">Username</label>
+            <input id="loginUsername" type="text" name="username" placeholder="Enter your username" required>
+        </div>
 
-        <br><br>
-
-        <input type="password"
-               name="password"
-               placeholder="Enter your password"
-               required>
-
-        <br><br>
+        <div class="form-field">
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" name="password" placeholder="Enter your password" required>
+        </div>
 
         <button type="submit">Login</button>
     </form>
 
-    <p style="margin-top:15px;">
+    <p class="helper-text">
         No account?
-        <a href="{{ url_for('register') }}">Create one</a>
+        <a class="link-muted" href="{{ url_for('register') }}">Create one</a>
     </p>
 </div>
 

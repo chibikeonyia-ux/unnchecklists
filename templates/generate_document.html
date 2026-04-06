@@ -3,17 +3,22 @@
 
 <div class="card">
     <h2>Template Document Generator</h2>
+    <p class="section-lead">Generate quick attestation or undertaking letters when needed.</p>
 
-    <form method="POST">
-        <label><strong>Full Name</strong></label><br>
-        <input type="text" name="name" value="{{ name or '' }}" required style="width:100%; padding:8px;"><br><br>
+    <form method="POST" class="stack" data-submit-message="Preparing document...">
+        <div class="form-field">
+            <label for="docName">Full name</label>
+            <input id="docName" type="text" name="name" value="{{ name or '' }}" required>
+        </div>
 
-        <label><strong>Select Document Type</strong></label><br>
-        <select name="doc_type" required style="width:100%; padding:8px;">
-            <option value="">-- Choose --</option>
-            <option value="Attestation Letter" {% if doc_type=='Attestation Letter' %}selected{% endif %}>Letter of Attestation</option>
-            <option value="Undertaking Letter" {% if doc_type=='Undertaking Letter' %}selected{% endif %}>Letter of Undertaking</option>
-        </select><br><br>
+        <div class="form-field">
+            <label for="docType">Select document type</label>
+            <select id="docType" name="doc_type" required>
+                <option value="">-- Choose --</option>
+                <option value="Attestation Letter" {% if doc_type=='Attestation Letter' %}selected{% endif %}>Letter of Attestation</option>
+                <option value="Undertaking Letter" {% if doc_type=='Undertaking Letter' %}selected{% endif %}>Letter of Undertaking</option>
+            </select>
+        </div>
 
         <button type="submit">Generate</button>
     </form>
@@ -22,18 +27,20 @@
         <hr>
         <h3>Preview</h3>
 
-        <textarea rows="10" style="width:100%;" readonly>{{ document }}</textarea>
+        <textarea rows="10" readonly>{{ document }}</textarea>
 
-        <form method="POST" action="{{ url_for('download_pdf') }}">
-            <!-- Pass the generated text directly -->
+        <form method="POST" action="{{ url_for('download_pdf') }}" data-submit-message="Generating PDF...">
             <input type="hidden" name="document" value="{{ document }}">
-            <br>
-            <button type="submit">Download as PDF</button>
+            <div class="action-row" style="margin-top: 12px;">
+                <button type="submit">Download as PDF</button>
+                <a class="btn btn-outline" href="{{ url_for('generate_document') }}">Start a New Document</a>
+            </div>
         </form>
     {% endif %}
 
-    <br>
-    <a href="{{ url_for('home') }}">← Back to Home</a>
+    <div style="margin-top: 18px;">
+        <a class="link-muted" href="{{ url_for('home') }}">&larr; Back to Home</a>
+    </div>
 </div>
 
 {% endblock %}

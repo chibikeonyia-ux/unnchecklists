@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Add New FAQ</h2>
+<div class="card">
+    <h2>Add New FAQ</h2>
+    <p class="section-lead">Provide clear, student-friendly answers.</p>
 
-<form method="POST" action="{{ url_for('admin_add_faq') }}">
-    <label>Category:</label><br>
-    <select name="category_id" required>
-        <option value="">-- Select Category --</option>
-        {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-        {% endfor %}
-    </select><br><br>
+    <form method="POST" action="{{ url_for('admin_add_faq') }}" class="stack" data-submit-message="Saving FAQ...">
+        <div class="form-field">
+            <label for="faqCategory">Category</label>
+            <select id="faqCategory" name="category_id" required>
+                <option value="">-- Select Category --</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <label>Question:</label><br>
-    <input type="text" name="question" required style="width:100%; padding:8px;"><br><br>
+        <div class="form-field">
+            <label for="faqQuestion">Question</label>
+            <input id="faqQuestion" type="text" name="question" required placeholder="e.g. How do I print my admission letter?">
+        </div>
 
-    <label>Answer:</label><br>
-    <textarea name="answer" required rows="5" style="width:100%; padding:8px;"></textarea><br><br>
+        <div class="form-field">
+            <label for="faqAnswer">Answer</label>
+            <textarea id="faqAnswer" name="answer" required rows="5" placeholder="Provide a short, clear response."></textarea>
+        </div>
 
-    <button type="submit">Add FAQ</button>
-</form>
+        <button type="submit">Add FAQ</button>
+    </form>
 
-<a href="{{ url_for('admin_faqs') }}">← Back to FAQ list</a>
+    <div style="margin-top: 18px;">
+        <a class="link-muted" href="{{ url_for('admin_faqs') }}">&larr; Back to FAQ list</a>
+    </div>
+</div>
 
 {% endblock %}

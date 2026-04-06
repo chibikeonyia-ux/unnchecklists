@@ -7,184 +7,42 @@
     <!-- REQUIRED FOR RESPONSIVENESS -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #f4f6f8;
-            color: #333;
-        }
-
-        /* ---------------- NAVBAR ---------------- */
-        nav {
-            background: #222;
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .nav-brand {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        .admin-badge {
-            background: crimson;
-            padding: 3px 7px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-left: 5px;
-        }
-
-        /* ---------------- MOBILE MENU BUTTON ---------------- */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 26px;
-            cursor: pointer;
-        }
-
-        /* ---------------- HEADER ---------------- */
-        header {
-            background-color: darkgreen;
-            color: white;
-            padding: 25px 15px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        /* ---------------- MAIN ---------------- */
-        main {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        /* ---------------- CARDS ---------------- */
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* ---------------- BUTTONS ---------------- */
-        button {
-            background-color: darkgreen;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background-color: green;
-        }
-
-        /* ---------------- FLASH MESSAGES ---------------- */
-        .flash {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .flash.success { background: green; }
-        .flash.error { background: red; }
-
-        /* ---------------- RESPONSIVE ---------------- */
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .nav-links {
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                background: #222;
-                margin-top: 10px;
-                padding: 10px 0;
-            }
-
-            .nav-links.show {
-                display: flex;
-            }
-
-            .nav-links a {
-                padding: 8px 0;
-                text-align: center;
-            }
-
-            header h1 {
-                font-size: 22px;
-            }
-        }
-    </style>
+    <!-- GLOBAL STYLES -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-<nav>
-    <div class="nav-brand">UNNREGASSISTANT</div>
+<!-- NAVBAR: Primary navigation and actions -->
+<nav class="navbar">
+    <div class="nav-inner">
+        <a class="nav-brand" href="{{ url_for('home') }}">UNN Registration Assistant</a>
 
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-controls="navLinks navActions" aria-expanded="false">Menu</button>
 
-    <div class="nav-links" id="navLinks">
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('faqs') }}">FAQ</a>
+        <div class="nav-links" id="navLinks">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('home') }}#steps">Steps</a>
+            <a href="{{ url_for('faqs') }}">FAQ</a>
+            <a href="{{ url_for('home') }}#contact">Contact</a>
+        </div>
 
-        {% if session.get('user') %}
-            <a href="{{ url_for('select_department') }}">Checklist</a>
-            <a href="{{ url_for('generate_document') }}">Documents</a>
-        {% endif %}
-
-        {% if session.get('admin') %}
-            <a href="{{ url_for('admin_dashboard') }}">
-                Admin Dashboard <span class="admin-badge">ADMIN</span>
-            </a>
-        {% endif %}
-
-        {% if session.get('user') %}
-            <span>👤 {{ session.get('user') }}</span>
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% elif session.get('admin') %}
-            <span>👤 {{ session.get('admin') }}</span>
-            <a href="{{ url_for('admin_logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        {% endif %}
+        <div class="nav-actions" id="navActions">
+            {% if session.get('user') %}
+                <a class="btn btn-ghost" href="{{ url_for('select_department') }}">Checklist</a>
+                <a class="btn btn-ghost" href="{{ url_for('generate_document') }}">Documents</a>
+                <span class="user-pill">User: {{ session.get('user') }}</span>
+                <a class="btn btn-ghost" href="{{ url_for('logout') }}">Logout</a>
+            {% elif session.get('admin') %}
+                <a class="btn btn-ghost" href="{{ url_for('admin_dashboard') }}">
+                    Admin Dashboard <span class="admin-badge">ADMIN</span>
+                </a>
+                <span class="user-pill">Admin: {{ session.get('admin') }}</span>
+                <a class="btn btn-ghost" href="{{ url_for('admin_logout') }}">Logout</a>
+            {% else %}
+                <a class="btn btn-ghost" href="{{ url_for('login') }}">Login</a>
+                <a class="btn btn-primary" href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
     </div>
 </nav>
 
@@ -198,19 +56,19 @@
   {% endif %}
 {% endwith %}
 
-<header>
+<!-- PAGE HEADER: Shown on non-home pages -->
+{% if request.endpoint != 'home' %}
+<header class="page-header">
     <h1>UNN Registration Assistant</h1>
+    <p>Guiding new students through registration steps and requirements.</p>
 </header>
+{% endif %}
 
 <main>
     {% block content %}{% endblock %}
 </main>
 
-<script>
-function toggleMenu() {
-    document.getElementById("navLinks").classList.toggle("show");
-}
-</script>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 
 </body>
 </html>
